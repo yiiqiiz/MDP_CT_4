@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Codystar:wght@300;400&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Assignment 01 · Creative Technology 03</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="title">
+                <h1>ASSIGNMENT 01</h1>
+                <p class="subtitle">#WWW as a Rube Goldberg machine</p>
+            </div>
+
+            <div class="meta">
+                <div class="pill">Fall 2025 · MDP</div>
+                <div class="pill"><span id="studentName">Yiqi Zhang</span></div>
+            </div>
+        </header>
+
+        <div class="docLayout">
+            <!-- Left: TOC -->
+            <aside class="sidebar" aria-label="Table of contents">
+                <ul class="toc">
+                    <li><a href="#overview"><span>Overview</span><small>00</small></a></li>
+                    <li><a href="#concept"><span>Concept</span><small>01</small></a></li>
+                    <li><a href="#process"><span>Process</span><small>02</small></a></li>
+                    <li><a href="#result"><span>Result</span><small>03</small></a></li>
+                    <li><a href="homepage.html"><span>← Back Home</span><small>↩</small></a></li>
+                </ul>
+            </aside>
+
+            <!-- Right: Documentation -->
+            <main class="main" aria-label="Documentation content">
+
+                <!-- Overview -->
+                <section class="section" id="overview">
+                    <h2 class="h2">Overview</h2>
+                    <p class="p">
+                        This project treats the web as a chain of interconnected events rather than a single
+                        interaction. A user’s button click initiates a causal sequence across multiple platforms: a
+                        random song is first retrieved from iTunes, and key metadata such as the song’s title, genre,
+                        and lyrical keywords are then passed to the Freesound API to search for related sound effects.
+                        One sound is randomly selected and returned to the user.
+
+                        Instead of aiming for efficiency or accuracy, the project emphasizes indirection and dependency.
+                        Music data is translated into search terms, triggering a secondary system that produces an
+                        unexpected sonic outcome. Inspired by Rube Goldberg–like mechanisms, the work foregrounds the
+                        invisible exchanges, translations, and decisions that occur behind a single user action,
+                        celebrating the web as a playful network of chained requests and responses rather than a purely
+                        functional tool.
+                    </p>
+
+                </section>
+
+                <!-- Concept -->
+                <section class="section" id="concept">
+                    <h2 class="h2">Concept</h2>
+                    <figure class="figure">
+                        <img src="01/rubegoldbergmachine.png" alt="System diagram">
+                    </figure>
+
+                    <p class="p">
+                        A Rube Goldberg machine is a deliberately overcomplicated system designed to perform a simple
+                        task through a long chain of interconnected actions. Each step in the system triggers the next,
+                        often using basic physical principles such as gravity, motion, or cause-and-effect. Originally
+                        popularized by the cartoonist Rube Goldberg, these machines function as humorous and critical
+                        commentaries on human ingenuity, technological excess, and the tendency to over-engineer
+                        solutions. In contemporary contexts, the concept of the Rube Goldberg machine is often used as a
+                        metaphor for complex digital systems, where a single user action can initiate multiple hidden
+                        processes across networks, servers, and platforms.
+                    </p>
+                </section>
+
+                <!-- Process -->
+                <section class="section" id="process">
+                    <h2 class="h2">Process</h2>
+
+
+                    <p class="p">
+                        At the beginning of the project, I intended to use the Freesound API as my primary data source.
+                        Because my thesis focuses on sound, I was interested in retrieving audio samples based on
+                        keywords or visual input (such as images) in order to explore how sound can be generated or
+                        associated through semantic or contextual metadata. However, at that stage, I was not yet
+                        familiar with how to properly use API keys and authentication, which made it difficult to
+                        implement Freesound within the limited timeframe of the assignment.
+
+                        As a result, I shifted to using the iTunes Search API as an alternative. The iTunes API allowed
+                        me to fetch music data without authentication, making it more accessible for rapid prototyping.
+                        When the user triggers the fetch action, the system randomly selects a song from the API
+                        results. Each retrieved track includes structured information such as the song title, genre,
+                        duration, album name, and a direct link to its iTunes page. This information then becomes the
+                        basis for further interaction and data exchange within the project.
+                    </p>
+
+                    <figure class="figure">
+                        <img src="01/freesound.png" alt="System diagram">
+                    </figure>
+
+                    <figure class="figure">
+                        <img src="01/itunes.png" alt="System diagram">
+                    </figure>
+
+                    <pre class="code-block"><code>
+triggerButton.addEventListener('click', () => {
+  mainContent.textContent = 'Loading...';
+  fetchRandomTrackWithRetry(0);
+});
+</code></pre>
+
+
+                    <p class="p">
+                        A single user action serves as the entry point of the system. A button click triggers a sequence
+                        of hidden processes, beginning with a loading state and followed by an API request.
+                    </p>
+
+                    <pre class="code-block"><code>
+const SEEDS = [
+  "jazz","lofi","ambient","piano","guitar","string quartet","electronic",
+  "hip hop","rock","pop","RnB","synth","orchestra","folk","blues","house",
+  "soundtrack","game","film","chill","beats","dub","trance","metal","acoustic"
+];
+
+const term = SEEDS[Math.floor(Math.random()*SEEDS.length)];
+</code></pre>
+
+                    <p class="p">
+
+                        A predefined list of sound-related keywords is used as a controlled input pool, from which one
+                        term is randomly selected to guide each API request.
+                    </p>
+
+                    <pre class="code-block"><code>
+const url = new URL('https://itunes.apple.com/search');
+url.searchParams.set('term', term);
+url.searchParams.set('media','music');
+url.searchParams.set('entity','musicTrack');
+url.searchParams.set('limit','50');
+url.searchParams.set('country','US');
+
+const res = await fetch(url.toString());
+const data = await res.json();
+</code></pre>
+
+                    <p class="p">
+
+                        The selected keyword is converted into a structured API request URL, sent to the server via a
+                        fetch call, and parsed from the returned JSON data for further processing.
+                    </p>
+
+                    <pre class="code-block"><code>
+${preview ? `&lt;audio controls src="\${preview}" type="audio/m4a"&gt;&lt;/audio&gt;` : ''}
+${source ? `&lt;a href="\${source}" target="_blank"&gt;iTunes/Apple Music page&lt;/a&gt;` : ''}
+</code></pre>
+
+                    <p class="p">
+
+                        The API response is translated from structured JSON data into visual text and playable sound,
+                        turning metadata into an interactive audiovisual interface.
+                    </p>
+
+                    <figure class="figure">
+                        <img src="01/test1.png" alt="System diagram">
+                    </figure>
+
+                    <p class="p">
+                        After learning how to obtain and use an API key, and in response to the assignment requirement
+                        to connect two APIs, I linked the iTunes Search API with the Freesound API. Information
+                        retrieved from a randomly selected song—such as its title or genre—is used as input to query
+                        Freesound, which returns a related but unpredictable sound effect. This process allows data from
+                        one system to trigger a second system, forming a chained interaction.
+                    </p>
+
+
+                    <figure class="figure">
+                        <img src="01/apikey.png" alt="System diagram">
+                    </figure>
+
+                    <pre class="code-block"><code>
+const track = await fetchRandomITunesTrack();
+renderTrack(track);
+
+const related = await fetchRelatedFreeSound(track);
+if (related) {
+  renderSound(related, related.queryUsed);
+} else {
+  renderError("No related sound found (tried multiple keywords).");
+}
+
+</code></pre>
+
+                    <p class="p">
+                        This code represents the core Rube Goldberg–style chain of the project. Data retrieved from the
+                        iTunes API is not treated as a final result, but instead becomes the input for a second system.
+                        The selected song directly informs the FreeSound query, demonstrating a clear API-chaining
+                        structure in which one API response triggers another.
+                    </p>
+
+                    <pre class="code-block"><code>
+const wordsFromTitle  = interestingWords(track.trackName || "");
+const wordsFromArtist = interestingWords(track.artistName || "");
+const genre = (track.primaryGenreName || "").toLowerCase();
+
+let queries = [];
+if (genre) queries.push(`${genre} ${sample(wordsFromTitle) || ""}`.trim());
+if (wordsFromTitle.length) queries.push(sample(wordsFromTitle));
+if (genre) queries.push(genre);
+if (wordsFromArtist.length) queries.push(sample(wordsFromArtist));
+
+queries.push(sample(["whoosh","click","beep","drone","pad","hit","impact","swell",
+"rain","wind","city","ocean","footstep"]));
+queries = shuffle(dedup(queries.filter(Boolean)));
+</code></pre>
+
+                    <p class="p">
+                        This part of the code functions as a translation mechanism, converting music metadata, such as
+                        song title, artist name, and genre, into meaningful search queries for the FreeSound API. Rather
+                        than performing a random search, the system follows a structured strategy with multiple fallback
+                        options, ensuring that the generated sound queries remain contextually related while still
+                        allowing for unpredictability.
+                    </p>
+
+                    <pre class="code-block"><code>
+const url = new URL("https://freesound.org/apiv2/search/text/");
+url.searchParams.set("query", query);
+url.searchParams.set("page_size", "40");
+url.searchParams.set("fields", "id,name,previews,license,username,created,url");
+
+const resp = await fetch(url.toString(), {
+  headers: { "Authorization": `Token ${FREESOUND_API_KEY}` }
+});
+const data = await resp.json();
+</code></pre>
+
+                    <p class="p">
+                        This section handles the second API request, using an authenticated call with an API key to
+                        access the FreeSound database. The request specifies selected fields to reduce unnecessary data
+                        and filters the results to include only sounds with playable previews, ensuring that the
+                        returned data can be directly translated into an audible output.
+                    </p>
+
+                    <pre class="code-block"><code>
+for (const q of queries) {
+  const sound = await searchFreeSoundOnce(q);
+  if (sound) return { sound, queryUsed: q };
+}
+return null;
+</code></pre>
+
+                    <p class="p">
+                        This section implements a multi-path search strategy, allowing the system to attempt multiple
+                        queries rather than stopping at the first failure. By iterating through different keyword
+                        combinations and fallback options, the machine continues exploring until a valid sound is found,
+                        reinforcing the idea of a chained, self-adjusting system rather than a single linear action.
+                    </p>
+                </section>
+
+                <!-- Result -->
+                <section class="section" id="result">
+                    <h2 class="h2">Result</h2>
+                    <p class="p">
+                        This video shows a successful connection test of the Arduino system, demonstrating basic sensor
+                        input and system response before final integration.
+                    </p>
+
+                    <figure class="figure">
+                        <iframe src="https://www.youtube.com/embed/TreKEsT2AOI"
+                            title="WWW as a Rube Goldberg machine" allowfullscreen>
+                        </iframe>
+
+                    
+            </main>
+        </div>
+
+        <footer class="footer">
+            <div>© <span id="year"></span> Creative Technology 03</div>
+            <div>“Thank you Maxim”</div>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('studentName').textContent = 'Yiqi Zhang';
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 可选：给目录点击增加平滑滚动（浏览器支持时生效）
+        document.documentElement.style.scrollBehavior = 'smooth';
+    </script>
+</body>
+
+</html>
