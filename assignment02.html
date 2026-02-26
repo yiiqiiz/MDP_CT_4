@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Codystar:wght@300;400&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Assignment 02 · Creative Technology 03</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="title">
+                <h1>ASSIGNMENT 02</h1>
+                <p class="subtitle">#Simulation and Design</p>
+            </div>
+
+            <div class="meta">
+                <div class="pill">Fall 2025 · MDP</div>
+                <div class="pill"><span id="studentName">Yiqi Zhang</span></div>
+            </div>
+        </header>
+
+        <div class="docLayout">
+            <!-- Left: TOC -->
+            <aside class="sidebar" aria-label="Table of contents">
+                <ul class="toc">
+                    <li><a href="#overview"><span>Overview</span><small>00</small></a></li>
+                    <li><a href="#concept"><span>Concept</span><small>01</small></a></li>
+                    <li><a href="#process"><span>Process</span><small>02</small></a></li>
+                    <li><a href="#result"><span>Result</span><small>03</small></a></li>
+                    <li><a href="homepage.html"><span>← Back Home</span><small>↩</small></a></li>
+                </ul>
+            </aside>
+
+            <!-- Right: Documentation -->
+            <main class="main" aria-label="Documentation content">
+
+                <!-- Overview -->
+                <section class="section" id="overview">
+                    <h2 class="h2">Overview-Densifying</h2>
+                    <p class="p">
+                        This project explores densifying as a systemic condition through a simulated urban traffic
+                        environment. Starting from the premise that population growth intensifies not only the number of
+                        vehicles but also the complexity and pressure placed on infrastructural systems, the simulation
+                        models how increasing density leads to congestion, inefficiency, and emergent breakdowns in
+                        movement.
+                        <br><br>
+                        Using p5.js, I constructed a simplified micro-world where roads and vehicles incrementally
+                        accumulate over time. Roads represent expanding urban infrastructure, while colored points
+                        represent individual vehicles. As the system densifies, more vehicles are introduced and begin
+                        to occupy the same limited paths. Vehicles move with semi-random behavior and intermittently
+                        stop along the roads, producing moments of congestion that echo real-world traffic jams caused
+                        not by singular events, but by cumulative density and friction within the system.
+                        <br><br>
+                        Rather than depicting a realistic city, the simulation abstracts urban traffic into behaviors
+                        and relationships: movement versus obstruction, flow versus accumulation, expansion versus
+                        overload. Numerical counters within the interface track the growth of both roads and vehicles,
+                        making density legible not only visually but quantitatively. As these values increase, the
+                        system’s performance visibly degrades, shifting attention from individual forms to
+                        collective behavior and emergent patterns.
+                    </p>
+
+                </section>
+
+                <!-- Concept -->
+                <section class="section" id="concept">
+                    <h2 class="h2">Concept</h2>
+                    <figure class="figure">
+                        <img src="02/data.png" alt="System diagram">
+                    </figure>
+
+                    <p class="p">
+                        Densifying examines density not as a static condition, but as a self-amplifying process. Rather
+                        than representing traffic as an image of urban life, this project uses simulation to ask how
+                        accumulation itself becomes a governing force. Roads and vehicles are not designed as finished
+                        forms; they are introduced gradually, allowing congestion to emerge from repetition, proximity,
+                        and limited space.
+                        <br><br>
+                        As population increases, infrastructure expands in response—yet each new road invites more
+                        vehicles, and each new vehicle further strains the system. Density here is not simply a matter
+                        of quantity, but of interaction: vehicles pause unpredictably, movement slows, and localized
+                        congestion spreads across the network. What begins as circulation slowly transforms into
+                        friction.
+                        <br><br>
+                        By abstracting cars into colored points and roads into minimal paths, the simulation shifts
+                        focus away from realism and toward behavior. Traffic jams are not explicitly scripted; they
+                        arise as a consequence of densification itself. In this sense, the project treats congestion as
+                        an emergent phenomenon rather than a design flaw.
+                        <br><br>
+                        This vivarium models a critical feedback loop common in contemporary cities: growth produces
+                        infrastructure, infrastructure produces more growth, and the system ultimately becomes
+                        overwhelmed by its own density. Through simulation, Densifying reframes urban traffic as a
+                        living system—one that reveals how complexity, when unchecked, can undermine the very efficiency
+                        it promises.
+                    </p>
+                </section>
+
+                <!-- Process -->
+                <section class="section" id="process">
+                    <h2 class="h2">Process</h2>
+
+                    <figure class="figure">
+                        <img src="02/1.png" alt="System diagram">
+                    </figure>
+
+                    <pre class="code-block"><code>
+verticalXs, horizontalYs
+intersections
+segments
+addCross()
+rebuildNetwork()
+</code></pre>
+
+                    <p class="p">
+                        The road network is generated from intersecting vertical and horizontal lines, where each new
+                        cross introduces additional axes and forces the system to rebuild itself. As more crosses are
+                        added, intersections and segments multiply, increasing route complexity. Rather than being drawn
+                        once as a fixed layout, roads accumulate over time, allowing infrastructure to expand
+                        reactively. This mirrors urban densification, where growth produces complexity as a byproduct
+                        rather than as a consciously designed composition.
+                    </p>
+
+                    <pre class="code-block"><code>
+spawnAcc += (deltaTime/1000) * spawnPerSec;
+while (spawnAcc >= 1.0) spawnCar();
+</code></pre>
+
+                    <p class="p">
+
+                        Vehicle generation is tied to real time rather than frame count, causing density to build
+                        gradually instead of appearing all at once. This temporal accumulation makes densification
+                        legible as ongoing pressure within the system, reinforcing density as a process unfolding over
+                        time rather than a fixed or instantaneous condition.
+                    </p>
+
+                    <pre class="code-block"><code>
+drawRoads()
+circle(c.x, c.y, 6);
+HUD counters
+</code></pre>
+
+                    <p class="p">
+                        Cars are abstracted into colored points and roads into minimal linear paths, accompanied by a
+                        HUD that displays live system metrics. By avoiding visual realism, the simulation foregrounds
+                        behavior and performance over representation, encouraging the viewer to read the system
+                        analytically rather than narratively, with data functioning as an integral part of the visual
+                        language.
+                    </p>
+
+                    <figure class="figure">
+                        <img src="02/2.png" alt="System diagram">
+                    </figure>
+
+                    <figure class="figure">
+                        <img src="02/3.png" alt="System diagram">
+                    </figure>
+
+
+
+
+                    <pre class="code-block"><code>
+spawnAcc += (deltaTime/1000) * spawnPerSec;
+while (spawnAcc >= 1.0) spawnCar();
+</code></pre>
+
+                    <p class="p">
+                        Vehicle spawning is driven by real time rather than frame count, allowing density to accumulate
+                        gradually instead of appearing instantly. This temporal buildup frames densification as
+                        sustained pressure within the system, emphasizing density as an unfolding process rather than a
+                        fixed state.
+                    </p>
+
+                    <figure class="figure">
+                        <img src="02/4.png" alt="System diagram">
+                    </figure>
+
+                </section>
+
+                <!-- Result -->
+                <section class="section" id="result">
+                    <h2 class="h2">Result</h2>
+                    <p class="p">
+                        The final video documents the simulation in motion, capturing how density accumulates over time
+                        and how congestion emerges from simple rules and repeated interactions. Rather than presenting a
+                        fixed outcome, the footage highlights moments of buildup, friction, and slowdown, allowing
+                        densifying to be read as a dynamic process enacted by the system itself.
+                    </p>
+
+                    <figure class="figure">
+                        <iframe src="https://www.youtube.com/embed/hhB3jmcmGp8" title="Simulation and Design"
+                            allowfullscreen>
+                        </iframe>
+
+
+            </main>
+        </div>
+
+        <footer class="footer">
+            <div>© <span id="year"></span> Creative Technology 03</div>
+            <div>“Thank you Maxim”</div>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('studentName').textContent = 'Yiqi Zhang';
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 可选：给目录点击增加平滑滚动（浏览器支持时生效）
+        document.documentElement.style.scrollBehavior = 'smooth';
+    </script>
+</body>
+
+</html>

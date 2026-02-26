@@ -21,7 +21,7 @@ a {
 
 :root {
   --border: 0.5px solid #000;
-  --yellow: rgba(243, 0, 0, 0.92);
+  --yellow: rgba(246, 152, 194, 0.92);
   --muted: #555;
   --card-bg: #fff;
 }
@@ -137,7 +137,7 @@ h1 {
   align-items: center;
   text-decoration: none;
   border: var(--border);
-  background: rgba(252, 227, 0, 0.92);
+  background: rgba(246, 152, 194, 0.92);
   ;
   padding: 10px 10px;
   border-radius: 18px;
@@ -246,7 +246,7 @@ figcaption {
 
 /* Code block styling */
 pre.code-block {
-  background-color: rgba(252, 227, 0, 0.92);
+  background-color: rgba(246, 152, 194, 0.92);
   border: 0.5px solid #000;
   padding: 16px;
   overflow-x: auto;            

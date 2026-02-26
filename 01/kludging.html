@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <link href="https://fonts.googleapis.com/css2?family=Codystar:wght@300;400&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Assignment 01 · Creative Technology 04</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+    <div class="wrap">
+        <header>
+            <div class="title">
+                <h1>ASSIGNMENT 01</h1>
+                <p class="subtitle">#Kludging as a Creative Method</p>
+            </div>
+
+            <div class="meta">
+                <div class="pill">Spring 2026 · MDP</div>
+                <div class="pill"><span id="studentName">Yiqi Zhang</span></div>
+            </div>
+        </header>
+
+        <div class="docLayout">
+            <!-- Left: TOC -->
+            <aside class="sidebar" aria-label="Table of contents">
+                <ul class="toc">
+                    <li><a href="#overview"><span>Overview</span><small>00</small></a></li>
+                    <li><a href="#concept"><span>Concept</span><small>01</small></a></li>
+                    <li><a href="#process"><span>Process</span><small>02</small></a></li>
+                    <li><a href="#result"><span>Result</span><small>03</small></a></li>
+                    <li><a href="#backhome"><span>← Back Home</span><small>↩</small></a></li>
+                </ul>
+            </aside>
+
+            <!-- Right: Documentation -->
+            <main class="main" aria-label="Documentation content">
+
+                <!-- Overview -->
+                <section class="section" id="overview">
+                    <h2 class="h2">Overview</h2>
+                    <p class="p">
+                        This project investigates how real-time sound can generate the form of a virtual ceramic vessel.
+                        Using Max/MSP for live audio analysis and p5.js for 3D visualization, I will build a system
+                        where sound frequency data determines the shape of a container in real time.
+
+                        Rather than manually modeling a vessel, the form will emerge from sound input. Low and high
+                        frequency ranges will influence parameters such as width, curvature, and volume, allowing voice
+                        or environmental noise to sculpt the object dynamically.
+                        <br><br>
+                        The focus of this project is not to build a complete virtual ceramics tool, but to identify and
+                        construct one small critical component:
+                        <br><br>
+                        A clear mapping system between sound frequency data and vessel geometry.
+                        <br><br>
+                        This requires kludging together real-time FFT analysis, parameter smoothing, and 3D deformation.
+                        The system may be imperfect or unstable, and those imperfections will be embraced as part of the
+                        exploratory process.
+
+                        By isolating this sound-to-form translation layer, the project explores how computational data
+                        can behave like a material force, shaping digital form through live interaction.
+                    </p>
+
+                </section>
+
+                <!-- Concept -->
+                <section class="section" id="concept">
+                    <h2 class="h2">Concept</h2>
+                    <figure class="figure">
+                        <img src="01.png" alt="System diagram">
+                    </figure>
+
+                    <p class="p">
+                        This project translates real-time sound into speculative 3D vessel forms. Live audio is captured
+                        through a contact mic and processed to extract sound features such as amplitude, frequency, and
+                        temporal events. These features are filtered, averaged, and mapped through a translation logic
+                        system that converts sound data into geometric parameters—height, radius, texture, and
+                        deformation.
+                        <br><br>
+                        Rather than directly modeling form, the vessel emerges from a computational negotiation between
+                        signal input and mapping rules. The work focuses on designing this translation layer, where
+                        sound becomes structure and data becomes morphology.
+                    </p>
+                </section>
+
+                <!-- Process -->
+                <section class="section" id="process">
+                    <h2 class="h2">Process</h2>
+
+
+                    <p class="p">
+                        At the beginning of the project, I intended to use the Freesound API as my primary data source.
+                        Because my thesis focuses on sound, I was interested in retrieving audio samples based on
+                        keywords or visual input (such as images) in order to explore how sound can be generated or
+                        associated through semantic or contextual metadata. However, at that stage, I was not yet
+                        familiar with how to properly use API keys and authentication, which made it difficult to
+                        implement Freesound within the limited timeframe of the assignment.
+
+                        As a result, I shifted to using the iTunes Search API as an alternative. The iTunes API allowed
+                        me to fetch music data without authentication, making it more accessible for rapid prototyping.
+                        When the user triggers the fetch action, the system randomly selects a song from the API
+                        results. Each retrieved track includes structured information such as the song title, genre,
+                        duration, album name, and a direct link to its iTunes page. This information then becomes the
+                        basis for further interaction and data exchange within the project.
+                    </p>
+
+                    <figure class="figure">
+                        <img src="02.png" alt="System diagram">
+                    </figure>
+
+                    <figure class="figure">
+                        <img src="01/itunes.png" alt="System diagram">
+                    </figure>
+
+                    
+
+
+                    <p class="p">
+                        A single user action serves as the entry point of the system. A button click triggers a sequence
+                        of hidden processes, beginning with a loading state and followed by an API request.
+                    </p>
+
+                    
+
+                    <p class="p">
+
+                        A predefined list of sound-related keywords is used as a controlled input pool, from which one
+                        term is randomly selected to guide each API request.
+                    </p>
+
+                    
+
+                    <p class="p">
+
+                        The selected keyword is converted into a structured API request URL, sent to the server via a
+                        fetch call, and parsed from the returned JSON data for further processing.
+                    </p>
+
+                    
+
+                    <p class="p">
+
+                        The API response is translated from structured JSON data into visual text and playable sound,
+                        turning metadata into an interactive audiovisual interface.
+                    </p>
+
+                    <figure class="figure">
+                        <img src="01/test1.png" alt="System diagram">
+                    </figure>
+
+                    <p class="p">
+                        After learning how to obtain and use an API key, and in response to the assignment requirement
+                        to connect two APIs, I linked the iTunes Search API with the Freesound API. Information
+                        retrieved from a randomly selected song—such as its title or genre—is used as input to query
+                        Freesound, which returns a related but unpredictable sound effect. This process allows data from
+                        one system to trigger a second system, forming a chained interaction.
+                    </p>
+
+
+                    <figure class="figure">
+                        <img src="01/apikey.png" alt="System diagram">
+                    </figure>
+
+                    
+
+                    <p class="p">
+                        This code represents the core Rube Goldberg–style chain of the project. Data retrieved from the
+                        iTunes API is not treated as a final result, but instead becomes the input for a second system.
+                        The selected song directly informs the FreeSound query, demonstrating a clear API-chaining
+                        structure in which one API response triggers another.
+                    </p>
+
+                    
+
+                    <p class="p">
+                        This part of the code functions as a translation mechanism, converting music metadata, such as
+                        song title, artist name, and genre, into meaningful search queries for the FreeSound API. Rather
+                        than performing a random search, the system follows a structured strategy with multiple fallback
+                        options, ensuring that the generated sound queries remain contextually related while still
+                        allowing for unpredictability.
+                    </p>
+
+                    
+
+                    <p class="p">
+                        This section handles the second API request, using an authenticated call with an API key to
+                        access the FreeSound database. The request specifies selected fields to reduce unnecessary data
+                        and filters the results to include only sounds with playable previews, ensuring that the
+                        returned data can be directly translated into an audible output.
+                    </p>
+
+                    <pre class="code-block"><code>
+for (const q of queries) {
+  const sound = await searchFreeSoundOnce(q);
+  if (sound) return { sound, queryUsed: q };
+}
+return null;
+</code></pre>
+
+                    <p class="p">
+                        This section implements a multi-path search strategy, allowing the system to attempt multiple
+                        queries rather than stopping at the first failure. By iterating through different keyword
+                        combinations and fallback options, the machine continues exploring until a valid sound is found,
+                        reinforcing the idea of a chained, self-adjusting system rather than a single linear action.
+                    </p>
+                </section>
+
+                <!-- Result -->
+                <section class="section" id="result">
+                    <h2 class="h2">Result</h2>
+                    <p class="p">
+                        This video shows a successful connection test of the Arduino system, demonstrating basic sensor
+                        input and system response before final integration.
+                    </p>
+
+                    <figure class="figure">
+                        <iframe src="https://www.youtube.com/embed/TreKEsT2AOI" title="WWW as a Rube Goldberg machine"
+                            allowfullscreen>
+                        </iframe>
+
+
+            </main>
+        </div>
+
+        <footer class="footer">
+            <div>© <span id="year"></span> Creative Technology 04</div>
+            <div>“Thank you Maxim”</div>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('studentName').textContent = 'Yiqi Zhang';
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 可选：给目录点击增加平滑滚动（浏览器支持时生效）
+        document.documentElement.style.scrollBehavior = 'smooth';
+    </script>
+</body>
+
+</html>
