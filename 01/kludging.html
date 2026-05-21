@@ -42,25 +42,20 @@
                 <section class="section" id="overview">
                     <h2 class="h2">Overview</h2>
                     <p class="p">
-                        This project investigates how real-time sound can generate the form of a virtual ceramic vessel.
-                        Using Max/MSP for live audio analysis and p5.js for 3D visualization, I will build a system
-                        where sound frequency data determines the shape of a container in real time.
-
-                        Rather than manually modeling a vessel, the form will emerge from sound input. Low and high
-                        frequency ranges will influence parameters such as width, curvature, and volume, allowing voice
-                        or environmental noise to sculpt the object dynamically.
+                        This project transforms real-time sound data into a dynamic three-dimensional ceramic vessel
+                        form. Using a microphone to capture ambient sound, the system analyzes the audio through Fast
+                        Fourier Transform (FFT), then maps the energy of different frequency bands onto the radius of a
+                        rotational vessel profile. Built through the logic of wheel-throwing, the vessel continuously
+                        deforms in response to sound: low frequencies shape the width and volume of the body, while
+                        higher frequencies disturb the contour of the neck and shoulder. Each moment of sound rewrites
+                        the form of the object.
                         <br><br>
-                        The focus of this project is not to build a complete virtual ceramics tool, but to identify and
-                        construct one small critical component:
-                        <br><br>
-                        A clear mapping system between sound frequency data and vessel geometry.
-                        <br><br>
-                        This requires kludging together real-time FFT analysis, parameter smoothing, and 3D deformation.
-                        The system may be imperfect or unstable, and those imperfections will be embraced as part of the
-                        exploratory process.
-
-                        By isolating this sound-to-form translation layer, the project explores how computational data
-                        can behave like a material force, shaping digital form through live interaction.
+                        Rather than focusing on the creation of a complete virtual ceramics tool, this project centers
+                        on the moment of translation between sound and material form. It asks what happens when
+                        temporal, fluid, and unstable sonic data attempts to become fixed as volume, contour, and mass.
+                        In this process, tensions emerge between computational logic and the constraints of ceramic
+                        form—between mapping and making, signal and surface, control and failure. The vessel never fully
+                        stabilizes; it exists only within the ongoing present of sound.
                     </p>
 
                 </section>
@@ -91,119 +86,194 @@
 
 
                     <p class="p">
-                        At the beginning of the project, I intended to use the Freesound API as my primary data source.
-                        Because my thesis focuses on sound, I was interested in retrieving audio samples based on
-                        keywords or visual input (such as images) in order to explore how sound can be generated or
-                        associated through semantic or contextual metadata. However, at that stage, I was not yet
-                        familiar with how to properly use API keys and authentication, which made it difficult to
-                        implement Freesound within the limited timeframe of the assignment.
-
-                        As a result, I shifted to using the iTunes Search API as an alternative. The iTunes API allowed
-                        me to fetch music data without authentication, making it more accessible for rapid prototyping.
-                        When the user triggers the fetch action, the system randomly selects a song from the API
-                        results. Each retrieved track includes structured information such as the song title, genre,
-                        duration, album name, and a direct link to its iTunes page. This information then becomes the
-                        basis for further interaction and data exchange within the project.
+                        This code was first developed as a tool for translating sound into a physical ceramic-making
+                        instrument. Rather than using sound only as a visual waveform, the program analyzes an audio
+                        file in p5.js and records its amplitude over time. Each moment of sound is compressed into a
+                        series of vertical pixel columns, where louder moments create taller forms and quieter moments
+                        create smaller ones. Through adjustable controls such as pixel resolution and amplitude scale,
+                        the waveform can shift between a rough, tool-like contour and a more detailed acoustic profile.
+                        <br><br>
+                        The exported waveform becomes a profile that can be laser-cut into a rib tool for wheel
+                        throwing. In this process, sound is not directly turned into a vessel, but into a shaping
+                        device: an intermediate object that carries the trace of sound and transfers it onto clay
+                        through touch, pressure, and rotation. The code therefore creates a bridge between digital audio
+                        data and hand-based ceramic making.
                     </p>
 
                     <figure class="figure">
                         <img src="02.png" alt="System diagram">
                     </figure>
 
-                    <figure class="figure">
-                        <img src="01/itunes.png" alt="System diagram">
-                    </figure>
-
-                    
-
-
-                    <p class="p">
-                        A single user action serves as the entry point of the system. A button click triggers a sequence
-                        of hidden processes, beginning with a loading state and followed by an API request.
-                    </p>
-
-                    
-
-                    <p class="p">
-
-                        A predefined list of sound-related keywords is used as a controlled input pool, from which one
-                        term is randomly selected to guide each API request.
-                    </p>
-
-                    
-
-                    <p class="p">
-
-                        The selected keyword is converted into a structured API request URL, sent to the server via a
-                        fetch call, and parsed from the returned JSON data for further processing.
-                    </p>
-
-                    
-
-                    <p class="p">
-
-                        The API response is translated from structured JSON data into visual text and playable sound,
-                        turning metadata into an interactive audiovisual interface.
-                    </p>
-
-                    <figure class="figure">
-                        <img src="01/test1.png" alt="System diagram">
-                    </figure>
-
-                    <p class="p">
-                        After learning how to obtain and use an API key, and in response to the assignment requirement
-                        to connect two APIs, I linked the iTunes Search API with the Freesound API. Information
-                        retrieved from a randomly selected song—such as its title or genre—is used as input to query
-                        Freesound, which returns a related but unpredictable sound effect. This process allows data from
-                        one system to trigger a second system, forming a chained interaction.
-                    </p>
-
-
-                    <figure class="figure">
-                        <img src="01/apikey.png" alt="System diagram">
-                    </figure>
-
-                    
-
-                    <p class="p">
-                        This code represents the core Rube Goldberg–style chain of the project. Data retrieved from the
-                        iTunes API is not treated as a final result, but instead becomes the input for a second system.
-                        The selected song directly informs the FreeSound query, demonstrating a clear API-chaining
-                        structure in which one API response triggers another.
-                    </p>
-
-                    
-
-                    <p class="p">
-                        This part of the code functions as a translation mechanism, converting music metadata, such as
-                        song title, artist name, and genre, into meaningful search queries for the FreeSound API. Rather
-                        than performing a random search, the system follows a structured strategy with multiple fallback
-                        options, ensuring that the generated sound queries remain contextually related while still
-                        allowing for unpredictability.
-                    </p>
-
-                    
-
-                    <p class="p">
-                        This section handles the second API request, using an authenticated call with an API key to
-                        access the FreeSound database. The request specifies selected fields to reduce unnecessary data
-                        and filters the results to include only sounds with playable previews, ensuring that the
-                        returned data can be directly translated into an audible output.
-                    </p>
-
                     <pre class="code-block"><code>
-for (const q of queries) {
-  const sound = await searchFreeSoundOnce(q);
-  if (sound) return { sound, queryUsed: q };
+function recordCurrentFrame() {
+  let wave = fft.waveform(); // Array of [-1, 1]
+
+  let peak = 0;
+  let sumsq = 0;
+
+  for (let i = 0; i < wave.length; i++) {
+    let v = wave[i];
+    let av = Math.abs(v);
+
+    if (av > peak) peak = av;
+    sumsq += v * v;
+  }
+
+  let rms = Math.sqrt(sumsq / wave.length);
+
+  // Combined amplitude: smooth + strong peaks
+  let amp = 0.7 * rms + 0.3 * peak;
+  amp = constrain(amp, 0, 1);
+
+  let t = sound.currentTime();
+
+  // Store sound as time + amplitude data
+  recordedWave.push({ t: t, a: amp });
 }
-return null;
 </code></pre>
 
                     <p class="p">
-                        This section implements a multi-path search strategy, allowing the system to attempt multiple
-                        queries rather than stopping at the first failure. By iterating through different keyword
-                        combinations and fallback options, the machine continues exploring until a valid sound is found,
-                        reinforcing the idea of a chained, self-adjusting system rather than a single linear action.
+                        This code is the core sound-to-data translation. It reads the audio waveform, calculates the
+                        sound's amplitude by combining overall loudness and peak intensity, and stores each value with
+                        its timestamp. These time-amplitude points become the basis for generating the waveform profile,
+                        the laser-cut rib tool, and later the 3D vessel form.
+                    </p>
+
+
+                    <figure class="figure">
+                        <img src="03.png" alt="System diagram">
+                    </figure>
+
+
+
+
+                    <p class="p">
+                        I use Three.js because it allows sound data to become a real-time 3D form in the browser. My
+                        earlier p5.js code translated sound into a flat waveform for making a laser-cut rib tool, but
+                        Three.js extends this logic into volume. It allows the waveform or FFT data to shape the height,
+                        radius, and surface of a virtual ceramic vessel. Instead of modeling a fixed object, the system
+                        generates a form that continuously responds to sound, making the vessel a live translation
+                        between sonic data and ceramic geometry.
+                    </p>
+
+
+
+                    <figure class="figure">
+                        <img src="04.png" alt="System diagram">
+                    </figure>
+
+                    <h2 class="h2">Code 1: Extracting the sound spectrum</h2>
+
+                    <pre class="code-block"><code>
+function getMicFFT() {
+  let spectrum = fftAnalyser.analyze();
+
+  let binSize = floor(spectrum.length / NUM_BINS);
+  let raw = new Float32Array(NUM_BINS);
+
+  for (let i = 0; i < NUM_BINS; i++) {
+    let sum = 0;
+    for (let j = 0; j < binSize; j++) {
+      sum += spectrum[i * binSize + j];
+    }
+    raw[i] = sum / binSize / 255;
+  }
+
+  let peak = 0;
+  for (let i = 0; i < NUM_BINS; i++) {
+    if (raw[i] > peak) peak = raw[i];
+  }
+
+  if (peak > 0.001) {
+    for (let i = 0; i < NUM_BINS; i++) {
+      raw[i] = raw[i] / peak;
+    }
+  }
+
+  return raw;
+}
+</code></pre>
+
+                    <p class="p">
+                        This section reads live microphone input as FFT spectrum data, compresses the spectrum into 64
+                        frequency bands, and normalizes the values into a 0–1 range. These values become the raw sound
+                        material used to deform the vessel.
+                    </p>
+                    <br><br>
+                    <h2 class="h2">Code 2: Converting sound data into a vessel profile</h2>
+
+                    <pre class="code-block"><code>
+function getProfile(fftData, distortion) {
+  let eq  = equaliseFFT(fftData);
+  let pts = [];
+  let totalH = 260;
+
+  pts.push(createVector(0, totalH / 2));
+
+  for (let i = 0; i < NUM_BINS; i++) {
+    let t = i / (NUM_BINS - 1);
+    let y = totalH / 2 - t * totalH;
+
+    let bias;
+    if      (t < 0.10) bias = 0.30 + t * 3.5;
+    else if (t < 0.48) bias = 1.00 + (t - 0.10) * 0.20;
+    else if (t < 0.70) bias = 1.08 - (t - 0.48) * 1.60;
+    else               bias = 0.65 + (t - 0.70) * 0.50;
+
+    let r = 4 + bias * 55 + eq[i] * distortion * 20;
+    pts.push(createVector(r, y));
+  }
+
+  return pts;
+}
+</code></pre>
+
+
+
+
+                    <p class="p">
+                        This function is the core sound-to-form mapping. Each FFT value is assigned to a vertical
+                        position on the vessel and converted into a radius. A built-in bias creates a basic ceramic
+                        profile, while the sound data adds deformation to the body, shoulder, and neck.
+                    </p>
+                    <br><br>
+                    <h2 class="h2">Code 3: Rotating the profile into a 3D vessel</h2>
+
+                    <pre class="code-block"><code>
+function drawStrip(p0, p1, si, wire) {
+  let c0 = cosTable[si],   s0 = sinTable[si];
+  let c1 = cosTable[si+1], s1 = sinTable[si+1];
+
+  let x00 = p0.x * c0;
+  let z00 = p0.x * s0;
+  let y00 = p0.y;
+
+  let x10 = p1.x * c0;
+  let z10 = p1.x * s0;
+  let y10 = p1.y;
+
+  let x01 = p0.x * c1;
+  let z01 = p0.x * s1;
+  let y01 = p0.y;
+
+  let x11 = p1.x * c1;
+  let z11 = p1.x * s1;
+  let y11 = p1.y;
+
+  beginShape();
+  vertex(x00, y00, z00);
+  vertex(x10, y10, z10);
+  vertex(x11, y11, z11);
+  vertex(x01, y01, z01);
+  endShape(CLOSE);
+}
+</code></pre>
+
+
+                    <p class="p">
+                        This section converts the 2D vessel profile into a 3D rotational form. Each profile point uses
+                        its radius and height to generate circular coordinates around the central axis, producing a
+                        mesh-like ceramic vessel.
                     </p>
                 </section>
 
@@ -211,12 +281,16 @@ return null;
                 <section class="section" id="result">
                     <h2 class="h2">Result</h2>
                     <p class="p">
-                        This video shows a successful connection test of the Arduino system, demonstrating basic sensor
-                        input and system response before final integration.
+                        This coding system translates live sound into a responsive 3D ceramic vessel. Microphone input
+                        is analyzed through FFT, compressed into frequency bands, and mapped onto the vessel's vertical
+                        profile. A base ceramic logic defines the body, shoulder, neck, and opening, while sound data
+                        continuously changes the radius and surface of the form. By rotating this sound-driven profile
+                        into three dimensions, the code creates a live vessel that is not manually modeled, but
+                        generated through the interaction between sound, data, and ceramic form.
                     </p>
 
                     <figure class="figure">
-                        <iframe src="https://www.youtube.com/embed/TreKEsT2AOI" title="WWW as a Rube Goldberg machine"
+                        <iframe src="https://www.youtube.com/embed/H9O6JUwGYn8?si=mMyOcgsJRDKYiVom" title="Kludging as a Creative Method"
                             allowfullscreen>
                         </iframe>
 
